@@ -141,7 +141,7 @@ class DatetimeUtil
      *
      * @param string|int $time 默认当前时间
      *
-     * @return void
+     * @return string
      */
     public static function yearMonth($time = null)
     {
@@ -156,7 +156,7 @@ class DatetimeUtil
      *
      * @param string|int $time 默认当前时间
      *
-     * @return void
+     * @return string
      */
     public static function date($time = null)
     {
@@ -355,12 +355,25 @@ class DatetimeUtil
     public static function between($time, $stime, $etime)
     {
         $timea = self::timestamp($time);
-        $timeb = self::timestamp($stime);
-        $timec = self::timestamp($etime);
-        if ($timeb > $timec) {
-            return $timeb <= $timea && $timea <= $timec;
+
+        if ($stime && $etime) {
+            $timeb = self::timestamp($stime);
+            $timec = self::timestamp($etime);
+            if ($timeb > $timec) {
+                return $timeb <= $timea && $timea <= $timec;
+            }
+            return $timec <= $timea && $timea <= $timeb;
         }
-        return $timec <= $timea && $timea <= $timeb;
+
+        if ($stime) {
+            return self::isAfter(self::timestamp($stime), $timea);
+        }
+
+        if ($etime) {
+            return self::isBefore(self::timestamp($etime), $timea);
+        }
+
+        return $time ? false : true;
     }
 
     /**
@@ -391,5 +404,72 @@ class DatetimeUtil
     {
         $end_time = microtime(true);
         return round(($end_time - self::$timer_start[$name]) * 1000, $precision);
+    }
+
+    /**
+     * 获取指定日期所在星期的起止日期范围
+     *
+     * @author gjw
+     * @created 2023-06-12
+     *
+     * @param string|integer $time
+     * @param boolean $is_mon_start
+     * @return array
+     */
+    public static function getWeekRange($time = null, $is_mon_start = true)
+    {
+        $timestamp = self::timestamp($time);
+        $week_day = intval(date('w', $timestamp));
+        $week_day = $week_day === 0 ? 7 : $week_day;
+        if ($is_mon_start) {
+            $diff = $week_day - 1;
+        } else {
+            $diff = $week_day;
+        }
+
+        $start = strtotime('-' . $diff . ' day', $timestamp);
+        $end = strtotime('+6 day', $start);
+        return array(
+            date('Y-m-d', $start),
+            date('Y-m-d', $end)
+        );
+    }
+
+    /**
+     * 生日转年龄(周岁)
+     *
+     * @author gjw
+     * @created 2023-02-13 14:59:57
+     *
+     * @param string $birthday
+     * @param string $now
+     * @return integer
+     */
+    public static function birthdayToAge($birthday, $now = null)
+    {
+        $birthday_time = self::timestamp($birthday);
+        if (!$birthday_time) {
+            throw new \Exception('生日输入有误');
+        }
+
+        $now = self::timestamp($now);
+        if (!$now) {
+            throw new \Exception('参照年份输入有误');
+        }
+
+        $birth_year = intval(self::year($birthday_time));
+        $now_year = intval(self::year($now));
+        $age = abs($now_year - $birth_year);
+
+        $birth_date = self::date($birthday_time, '1970-m-d');
+        $now_date = self::date($now, '1970-m-d');
+
+        $birth_date_time = strtotime($birth_date);
+        $now_date_time = strtotime($now_date);
+
+        if ($birth_date_time > $now_date_time) {
+            $age -= 1;
+        }
+        return $age;
     }
 }
