@@ -1,6 +1,6 @@
 {
     "name": "nece001/php-util",
-    "description": "php 无限级分类树",
+    "description": "php 助手方法库，包含数组，字符串，日期时间，文件等助手方法",
     "type": "library",
     "license": "MIT",
     "autoload": {
