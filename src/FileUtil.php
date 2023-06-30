@@ -713,4 +713,28 @@ IconIndex=1
 Prop3=19,2';
         self::download($name . '.url', $content);
     }
+
+    /**
+     * 读取SQL文件
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-06-30
+     *
+     * @param string $filename 文件名
+     *
+     * @return array
+     */
+    public function loadSql($filename)
+    {
+        $content = file_get_contents($filename);
+
+        $content = preg_replace(array('#\/\*.*?\*\/\s*#ims', '/--\s[^\'\"]+\n/iU'), array('', ''), $content); // 清理注释
+        $matches = array();
+        $match = preg_match_all("@([\s\S]+?;)\h*[\n\r]@", $content, $matches); // 数据以分号;\n\r换行  为分段标记
+        if ($match) {
+            return $matches[1];
+        }
+
+        return array();
+    }
 }
