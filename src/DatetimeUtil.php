@@ -436,44 +436,6 @@ class DatetimeUtil
     }
 
     /**
-     * 生日转年龄(周岁)
-     *
-     * @author gjw
-     * @created 2023-02-13 14:59:57
-     *
-     * @param string $birthday
-     * @param string $now
-     * @return integer
-     */
-    public static function birthdayToAge($birthday, $now = null)
-    {
-        $birthday_time = self::timestamp($birthday);
-        if (!$birthday_time) {
-            throw new \Exception('生日输入有误');
-        }
-
-        $now = self::timestamp($now);
-        if (!$now) {
-            throw new \Exception('参照年份输入有误');
-        }
-
-        $birth_year = intval(self::year($birthday_time));
-        $now_year = intval(self::year($now));
-        $age = abs($now_year - $birth_year);
-
-        $birth_date = self::date($birthday_time, '1970-m-d');
-        $now_date = self::date($now, '1970-m-d');
-
-        $birth_date_time = strtotime($birth_date);
-        $now_date_time = strtotime($now_date);
-
-        if ($birth_date_time > $now_date_time) {
-            $age -= 1;
-        }
-        return $age;
-    }
-
-    /**
      * 检查某时间($time)是否符合某个corntab时间计划($str_cron)
      *
      * @param int    $time     时间戳

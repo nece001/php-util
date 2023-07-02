@@ -649,4 +649,87 @@ class StringUtil
 
         return str_replace($ctrls, '', $string);
     }
+
+    /**
+     * 将一个字符串部分字符用cover替代隐藏
+     * 
+     * @Author nece001@163.com
+     * @DateTime 2023-07-02
+     * 
+     * @param string    $string   待处理的字符串
+     * @param int       $start    规定在字符串的何处开始，
+     *                            正数 - 在字符串的指定位置开始
+     *                            负数 - 在从字符串结尾的指定位置开始
+     *                            0 - 在字符串中的第一个字符处开始
+     * @param int       $length   可选。规定要隐藏的字符串长度。默认是直到字符串的结尾。
+     *                            正数 - 从 start 参数所在的位置隐藏
+     *                            负数 - 从字符串末端隐藏
+     * @param string    $cover       替代符
+     * @return string   处理后的字符串
+     */
+    public static function mask($string, $start = 0, $length = 0, $cover = '*')
+    {
+        if ($string) {
+            $strarr = array();
+            $mb_strlen = mb_strlen($string);
+            while ($mb_strlen) {
+                $strarr[] = mb_substr($string, 0, 1, 'utf8');
+                $string = mb_substr($string, 1, $mb_strlen, 'utf8');
+                $mb_strlen = mb_strlen($string);
+            }
+
+            $strlen = count($strarr);
+            $begin  = $start >= 0 ? $start : ($strlen - abs($start));
+            $end    = $last   = $strlen - 1;
+            if ($length > 0) {
+                $end  = $begin + $length - 1;
+            } elseif ($length < 0) {
+                $end -= abs($length);
+            }
+
+            for ($i = $begin; $i <= $end; $i++) {
+                $strarr[$i] = $cover;
+            }
+            if ($begin >= $end || $begin >= $last || $end > $last) return false;
+            return implode('', $strarr);
+        }
+
+        return $string;
+    }
+
+    /**
+     * 遮蔽邮箱
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-07-02
+     *
+     * @param string $email
+     *
+     * @return string 例：9****7@qq.com
+     */
+    public static function maskEmail(string $email)
+    {
+        $parts = explode('@', $email);
+        if (isset($parts[1])) {
+            return self::mask($parts[0], 1, -1) . '@' . $parts[1];
+        }
+
+        return $email;
+    }
+
+    /**
+     * 遮蔽IP
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-07-02
+     *
+     * @param string $ip IP地址，例：192.168.0.54
+     *
+     * @return string 例：192.168.0.*
+     */
+    public static function maskIp($ip)
+    {
+        $dot = strripos($ip, ".");
+        return $dot !== false ? (substr($ip, 0, $dot) . '.*') : $ip;
+    }
 }
