@@ -203,7 +203,7 @@ class FileUtil
                 $path2 = $path . DIRECTORY_SEPARATOR . $file;
 
                 if (is_dir($path2)) {
-                    $tmp = self::listFile($path2, $files);
+                    $tmp = self::listFile($path2, $preg);
                     $files = array_merge($files, $tmp);
                 } else {
                     if ($preg) {
@@ -599,7 +599,6 @@ class FileUtil
      */
     public static function csvLoad($filename, $header = true)
     {
-
         $content = file_get_contents($filename);
         if ($content) {
             $array = ArrayUtil::csvToArray($content);
@@ -736,5 +735,67 @@ Prop3=19,2';
         }
 
         return array();
+    }
+
+    /**
+     * zip压缩
+     *
+     * @author gjw
+     * @created 2023-07-27 11:26:54
+     *
+     * @param string $zip_file 压缩文件名（绝对路径）
+     * @param string $source 待压缩文件或目录（绝对路径）
+     * @return void
+     */
+    public static function zip($zip_file, $source)
+    {
+        $path = str_replace('\\', '/', $source);
+        if (is_dir($source)) {
+            $file_list = self::listFile($source, false);
+        } else {
+            $file_list = array($source);
+            $path = substr($source, 0, strrpos($path, '/'));
+        }
+
+        $zip = new \ZipArchive();
+        if ($zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            foreach ($file_list as $file) {
+                $name = str_replace('\\', '/', $file);
+                $entryname = str_replace($path, '', $name);
+
+                $zip->addFile($file, $entryname);
+            }
+            $zip->close();
+        } else {
+            throw new \Exception('文件无法创建');
+        }
+    }
+
+    /**
+     * zip解压
+     *
+     * @author gjw
+     * @created 2023-07-27 11:27:55
+     *
+     * @param string $zip_file 压缩文件名（绝对路径）
+     * @param string $unzip_path 解压到的目录（绝对路径）
+     * @return void
+     */
+    public static function unzip($zip_file, $unzip_path)
+    {
+        if (!file_exists($unzip_path)) {
+            mkdir($unzip_path, 0777, true);
+        } else {
+            if (!is_dir($unzip_path)) {
+                throw new \Exception('解压路径不是目录');
+            }
+        }
+
+        $zip = new \ZipArchive();
+        if ($zip->open($zip_file) === true) {
+            $zip->extractTo($unzip_path);
+        } else {
+            throw new \Exception('文件无法打开');
+        }
     }
 }
