@@ -318,4 +318,81 @@ class ArrayUtil
         }
         return $tmp;
     }
+
+    /**
+     * 笛卡尔乘积
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-08-03
+     *
+     * @param array $a
+     * @param array $b
+     * ...
+     *
+     * @return array
+     */
+    public static function arrayCartesianProduct($a, $b)
+    {
+        $list = func_get_args();
+        $a = array();
+        foreach ($list as $b) {
+            $a = self::arrayCrossJoin($a, $b);
+        }
+        return $a;
+    }
+
+    /**
+     * 两个数组笛卡尔乘积合并为一个
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-08-03
+     *
+     * @param array $a
+     * @param array $b
+     *
+     * @return array
+     */
+    public static function arrayCrossJoin($a, $b)
+    {
+        if (empty($a)) {
+            if (empty($b)) {
+                return [];
+            } else {
+                return is_array($b) ? $b : [$b];
+            }
+        }
+
+        if (empty($b)) {
+            if (empty($a)) {
+                return [];
+            } else {
+                return is_array($a) ? $a : [$a];
+            }
+        }
+
+        $data = [];
+        foreach ($a as $i) {
+            foreach ($b as $j) {
+                $row = [];
+                if (is_array($i)) {
+                    if (is_array($j)) {
+                        $row = array_merge($i, $j);
+                    } else {
+                        $row = $i;
+                        $row[] = $j;
+                    }
+                } else {
+                    if (is_array($j)) {
+                        $row = $j;
+                        array_unshift($row, $i);
+                    } else {
+                        $row = [$i, $j];
+                    }
+                }
+
+                $data[] = $row;
+            }
+        }
+        return $data;
+    }
 }
