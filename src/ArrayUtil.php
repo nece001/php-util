@@ -88,7 +88,7 @@ class ArrayUtil
      * @DateTime 2023-06-12
      * 
      * @param array $array 数组
-     * @param string $key 键名路径: root/foo/bar => $array['root']['foo']['bar']
+     * @param mixed $key 键名路径: root/foo/bar => $array['root']['foo']['bar']
      * @param mixed $default 键不存在时返回的值
      * 
      * @return mixed
@@ -105,6 +105,40 @@ class ArrayUtil
             }
         }
         return $value;
+    }
+
+    /**
+     * 获取整数值
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-08-27
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param integer $default
+     *
+     * @return void
+     */
+    public static function getInt($array, $key, $default = 0)
+    {
+        return intval(self::getValue($array, $key, $default));
+    }
+
+    /**
+     * 获取布尔值
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-08-27
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param boolean $default
+     *
+     * @return void
+     */
+    public static function getBool($array, $key, $default = false)
+    {
+        return boolval(self::getValue($array, $key, $default));
     }
 
     /**
