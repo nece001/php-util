@@ -165,7 +165,7 @@ class ArrayUtil
      * @param mixed $key
      * @param integer $default
      *
-     * @return void
+     * @return integer
      */
     public static function getInt($array, $key, $default = 0)
     {
@@ -199,7 +199,7 @@ class ArrayUtil
      * @param mixed $key
      * @param boolean $default
      *
-     * @return void
+     * @return boolean
      */
     public static function getBool($array, $key, $default = false)
     {
