@@ -98,7 +98,7 @@ class ArrayUtil
         $parts = explode('/', trim(str_replace('.', '/', $key), '/'));
         $value = $array;
         foreach ($parts as $key) {
-            if (!isset($value[$key])) {
+            if (isset($value[$key])) {
                 $value = $value[$key];
             } else {
                 return false;
