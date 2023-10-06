@@ -82,6 +82,37 @@ class ArrayUtil
     }
 
     /**
+     * 值是否存在
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-10-06
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param boolean $allow_empty_string 是否接受空字符串
+     *
+     * @return boolean
+     */
+    public static function hasValue($array, $key, $allow_empty_string = false)
+    {
+        $parts = explode('/', trim(str_replace('.', '/', $key), '/'));
+        $value = $array;
+        foreach ($parts as $key) {
+            if (!isset($value[$key])) {
+                $value = $value[$key];
+            } else {
+                return false;
+            }
+        }
+
+        if ($allow_empty_string) {
+            return strlen($value) ? true : ($value === '');
+        } else {
+            return strlen($value) ? true : false;
+        }
+    }
+
+    /**
      * 根据路径获取多维数组指定键的值
      * 
      * @Author nece001@163.com
