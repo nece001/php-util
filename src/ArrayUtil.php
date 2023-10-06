@@ -108,6 +108,23 @@ class ArrayUtil
     }
 
     /**
+     * 获取字符串值
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-10-06
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param string $default
+     *
+     * @return string
+     */
+    public static function getString($array, $key, $default = '')
+    {
+        return strval(self::getValue($array, $key, $default));
+    }
+
+    /**
      * 获取整数值
      *
      * @Author nece001@163.com
@@ -122,6 +139,23 @@ class ArrayUtil
     public static function getInt($array, $key, $default = 0)
     {
         return intval(self::getValue($array, $key, $default));
+    }
+
+    /**
+     * 获取数字值
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-10-06
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param float $default
+     *
+     * @return float
+     */
+    public static function getNumber($array, $key, $default = 0)
+    {
+        return floatval(self::getValue($array, $key, $default));
     }
 
     /**
