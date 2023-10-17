@@ -793,7 +793,17 @@ Prop3=19,2';
 
         $zip = new \ZipArchive();
         if ($zip->open($zip_file) === true) {
-            $zip->extractTo($unzip_path);
+
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $info = $zip->statIndex($i, \ZipArchive::FL_ENC_RAW);
+                $name = $info['name'];
+                if ($info['crc'] == 0) {
+                    mkdir($unzip_path . DIRECTORY_SEPARATOR . substr($name, 0, -1));
+                } else {
+                    copy('zip://' . $zip_file . '#' . $zip->getNameIndex($i), $unzip_path . DIRECTORY_SEPARATOR . $name);
+                }
+            }
+            $zip->close();
         } else {
             throw new \Exception('文件无法打开');
         }
