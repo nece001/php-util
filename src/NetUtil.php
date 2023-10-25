@@ -177,4 +177,28 @@ class NetUtil
         }
         return $data;
     }
+
+    /**
+     * 端口是否开放检查
+     *
+     * @Author nece001@163.com
+     * @DateTime 2023-10-25
+     *
+     * @param string $host
+     * @param integer $port
+     *
+     * @return boolean
+     */
+    public static function portTest($host, $port)
+    {
+        $errno = 0;
+        $error = '';
+        $fp = @fsockopen($host, $port, $errno, $error, 2);
+        if ($fp) {
+            fclose($fp);
+            return true;
+        }
+
+        return false;
+    }
 }
