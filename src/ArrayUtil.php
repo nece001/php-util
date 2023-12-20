@@ -10,6 +10,66 @@ namespace Nece\Util;
  */
 class ArrayUtil
 {
+    /**
+     * 取第一个元素的键
+     *
+     * @author nece001@163.com
+     * @created 2023-12-20 16:38:49
+     *
+     * @param array $array
+     * @return int|string|null
+     */
+    public static function firstKey(array $array)
+    {
+        $keys = array_keys($array);
+        return isset($keys[0]) ? $keys[0] : null;
+    }
+
+    /**
+     * 取最后一个元素的键
+     *
+     * @author nece001@163.com
+     * @created 2023-12-20 16:38:58
+     *
+     * @param array $array
+     * @return int|string|null
+     */
+    public static function lastKey(array $array)
+    {
+        $keys = array_keys($array);
+        $count = count($keys);
+        return $count ? $keys[$count - 1] : null;
+    }
+
+    /**
+     * 获取第一个元素
+     *
+     * @Author nece001@163.com
+     * @Created 2023-12-20
+     *
+     * @param array $array
+     *
+     * @return mixed
+     */
+    public static function first(array $array)
+    {
+        return reset($array);
+    }
+
+    /**
+     * 获取最后一个元素
+     *
+     * @Author nece001@163.com
+     * @Created 2023-12-20
+     *
+     * @param array $array
+     *
+     * @return mixed
+     */
+    public static function last(array $array)
+    {
+        return end($array);
+    }
 
     /**
      * 解析参数字符串为数组
