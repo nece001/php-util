@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Library;
+namespace Nece\Util;
 
 use Exception;
 use ReflectionClass;
